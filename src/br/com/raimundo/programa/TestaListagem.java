@@ -1,18 +1,16 @@
 package br.com.raimundo.programa;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Teste {
+public class TestaListagem {
 	
 	public static void main(String... args) throws SQLException {
 		
-		Connection c = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/loja-virtual", "SA", "");
-		
-		Statement stmt = c.createStatement();
+		Connection connection = Database.getConection();
+		Statement stmt = connection.createStatement();
 		boolean resultado = stmt.execute("select * from Produto");
 		if(resultado) {
 			ResultSet result = stmt.getResultSet();
@@ -25,9 +23,12 @@ public class Teste {
 			
 			result.close();
 			stmt.close();
-			c.close();
+			connection.close();
+			
 		
 	}
 	}
+
+	
 
 }
