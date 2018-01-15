@@ -11,14 +11,30 @@ public class TestaInsercao {
 	
 	public static void main(String[] args) throws SQLException {
 		
-		String nome = "Notebook";
-		String descricao = "Notebook 'i5";
+		try(Connection connection = Database.getConection()){
+			connection.setAutoCommit(false);
+			String sql = "insert into Produto(nome, descricao) values(?,?)";
+			
+			try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+				adiciona("TV LG", "45 polegado", stmt);
+				adiciona("Blueray", "Full HDMI", stmt);
+				connection.commit();
+			}catch (Exception e){
+				System.out.println(e);
+				connection.rollback();
+			}
 		
-		Connection connection = Database.getConection();
-		String sql = "insert into Produto(nome, descricao) values(?,?)";
-		PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);	
+		}
+	}
+
+	private static ResultSet adiciona(String nome, String descricao, PreparedStatement stmt) throws SQLException {
 		stmt.setString(1, nome);
 		stmt.setString(2, descricao);
+		
+		if(nome.equals("Blueray")) {
+			
+			throw new IllegalArgumentException("ocorreu um problema");
+		}
 		
 		boolean result = stmt.execute();
 		System.out.println(result);
@@ -27,9 +43,8 @@ public class TestaInsercao {
 		while(resultSet.next()) {
 			System.out.println(resultSet.getInt("id") + " gerado");
 		}
-		stmt.close();
-		resultSet.close();
-		connection.close();
+		
+		return resultSet;
 	}
 
 }
