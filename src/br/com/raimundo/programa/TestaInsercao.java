@@ -11,7 +11,9 @@ public class TestaInsercao {
 	
 	public static void main(String[] args) throws SQLException {
 		
-		try(Connection connection = Database.getConection()){
+		ConnectionPool database = new ConnectionPool();
+		
+		try(Connection connection = database.getConection()){
 			connection.setAutoCommit(false);
 			String sql = "insert into Produto(nome, descricao) values(?,?)";
 			
@@ -22,6 +24,7 @@ public class TestaInsercao {
 			}catch (Exception e){
 				System.out.println(e);
 				connection.rollback();
+				System.out.println("Rollback feito");
 			}
 		
 		}
