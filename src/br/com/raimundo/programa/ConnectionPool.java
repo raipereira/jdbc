@@ -18,9 +18,7 @@ public class ConnectionPool {
 		pool.setPassword("");
 		this.dataSource = pool;
 	}
-	
-	
-	
+		
 	public Connection getConection() throws SQLException {
 		Connection connection = dataSource.getConnection();
 		return connection;
